@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-SDK_VERSION_NUMBER.js"></script>
+    <!-- <script type="text/javascript" src="video.js"></script>
+    <script>
+       function getHtml(template) {
+          return template.join('\n');
+       }
+       listAlbums();
+    </script> -->
+</head>
+<body>
+<!-- <button id="start">record</button> <button id="stop">stop</button><br>
+<video id='local-video' style="vertical-align: top; width:320px; height:240px; border: black 1px solid;" muted playsinline></video> -->
+
+    <form action="/video" method="post">
+        <div>
+            <label for="name">名前</label>
+            <input type="text" id="name" name="name">
+        </div>
+        <div>
+            <label for="file">ファイル</label>
+            <input type="file" id="file" name="file" webkitdirectory>
+        </div>
+        <input type="submit" value="送信する">
+    </form>
+    <script>
+        function handleFileSelect(evt) {
+          var files = evt.target.files; // FileList object
+      
+          // files is a FileList of File objects. List some properties.
+          var output = [];
+          for (var i = 0, f; f = files[i]; i++) {
+            output.push('<li><strong>', escape(f.name), '</strong> (', f.type || 'n/a', ') - ',
+                        f.size, ' bytes, last modified: ',
+                        f.lastModifiedDate.toLocaleDateString(), '</li>');
+          }
+          document.getElementById('list').innerHTML = '<ul>' + output.join('') + '</ul>';
+        }
+      
+        document.getElementById('files').addEventListener('change', handleFileSelect, false);
+    </script>
+
+</body>
+</html>

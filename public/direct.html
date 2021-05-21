@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="/test" method="post">
+        <div>
+            <label for="name">名前</label>
+            <input type="text" id="name" name="name">
+        </div>
+        <div>
+            <label for="video" accept="video/*" >ファイル</label>
+            <input type="file" id="video" name="video" onchange={handle_file_change}>
+        </div>
+        <input type="submit" value="送信する">
+    </form>
+   <script>
+    
+       const handle_file_change = event => {
+           const file = event.target.files[0];
+           const name = event.target.name;
+
+           var reader = FileReader();
+           var value = null;
+           reader.readAsDataURL(file)
+           reader.onload = event => {
+            console.log("img ===    " + event.target.result)
+            value = event.target.result
+            // console.log(value)
+           }
+       }
+    </script>
+  
+
+
+</body>
+</html>
