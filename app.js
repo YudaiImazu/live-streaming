@@ -156,20 +156,20 @@ app.post("/test", (req,res) => {
 //     res.json({id: req.body.id});
 // });
 
-const upload = multer({ dest: './uploads/' }).single('thumbnail');
-app.post("/upload-temp", function(req, res) {
-    console.log("test")
-    console.log(req.body);
-    console.log("**************");
+// const upload = multer({ dest: './uploads/' }).single('thumbnail');
+// app.post("/upload-temp", function(req, res) {
+//     console.log("test")
+//     console.log(req.body);
+//     console.log("**************");
     
-    upload(req, res, function(err) {
-        if(err) {
-            res.send("Failede to write" + req.body.q.file.destination + "with" + err)
-        } else {
-            res.send("uploaded : " + req.body.q);
-        }
-    })
-})
+//     upload(req, res, function(err) {
+//         if(err) {
+//             res.send("Failede to write" + req.body.q.file.destination + "with" + err)
+//         } else {
+//             res.send("uploaded : " + req.body.q);
+//         }
+//     })
+// })
 
 
 app.post("/ffmpeg", async(req, res, next) => {
@@ -204,6 +204,35 @@ app.post("/ffmpeg", async(req, res, next) => {
         res.send(error);
     }
 })
+
+
+// const upload = multer({ 
+//     dest: 'uploads/',
+    
+//  })
+
+// app.post('/upload', upload.single('file'), function (req, res) {
+
+//     res.send(req.file.originalname + 'ファイルのアップロードが完了しました。');
+//   })
+
+// こっちが正しい
+
+  var storage = multer.diskStorage({
+    // ファイルの保存先を指定
+    destination: function (req, file, cb) {
+      cb(null, 'uploads/')
+    },
+    // ファイル名を指定(オリジナルのファイル名を指定)
+    filename: function (req, file, cb) {
+      cb(null, file.originalname)
+    }
+  })
+  var upload = multer({ storage: storage })
+
+  app.post('/upload', upload.single('file'), function(req, res) {
+    res.json({ 'result': 'success!' });
+  });
 
 
 const port = process.env.port || 3000;
