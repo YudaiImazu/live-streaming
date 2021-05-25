@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+   <a id="download">Download
+       <button id="stop">Stop
+
+        <script>
+            let shouldStop = false;
+            let stopped = false;
+            const downloadLink = document.getElementById('dowmload');
+            const stopButton = document.getElementById('stop');
+
+            stopButton.addEventListener('clcik',function() {
+                shouldStop = true;
+            })
+
+            var handleSuccess = function(stream) {
+                const options = {mimeType: "video/webm"};
+                const recordedChunks = [];
+                const mediaRecorder = new mediaRecorder(stream, options);
+
+                mediaRecorder.addEventListener('dataavailable', function(e) {
+                    if (e.data.size > 0) {
+                        recordedChunks.push(e.data);
+                    }
+
+                    if (shouldStop === ture && stopped === false) {
+                        mediaRecorder.stop();
+                        stopped = true;
+                    }
+                });
+
+                mediaRecorder.addEventListener('stop', function() {
+                    downloadLink.href = URL.createObjectURL(new Blob(recordedChunks));
+                    downloadLink.download = 'acetest.webm';
+                })
+                mediaRecorder.start();
+            }
+                navigator.mediaDevices.getUserMedia({ audio: true, video: true })
+      .then(handleSuccess);
+
+        </script>
+</body>
+</html>

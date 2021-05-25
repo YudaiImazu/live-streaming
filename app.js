@@ -83,19 +83,14 @@ app.post("/test", (req,res) => {
         accessKeyId: ID,
         secretAccessKey: SECRET
     });
+
+ 
     
-    // const uploadFile = (fileName,name) => {
-    //     const fileContent = fs.readFileSync(fileName);
     
-    //     const params = {
-    //         Bucket: "test-for-video-imazu",
-    //         Key: name,
-    //         Body: fileContent
-    //     };
 
     const uploadFile = (file) => {
   
-        const fileContent = fs.readFileSync(file);
+       
 
 
        
@@ -104,19 +99,11 @@ app.post("/test", (req,res) => {
         const params = {
             Bucket: "test-for-video-imazu",
             Key: "test1",
-            Body: fileContent,
+            Body: file,
             
-            // ACL: "public-read",
+            
         };
     
-    
-        // s3.upload(params, function(err, data) {
-        //     if (err) {
-        //         throw err;
-        //     } else {
-        //         console.log('File upload successfully. ${data.Location}');
-        //     }
-        // })
         s3.putObject(params, function(err, data) {
             if (err) {
                 results.innerHTML = 'ERROR: ' + err;
@@ -230,9 +217,69 @@ app.post("/ffmpeg", async(req, res, next) => {
   })
   var upload = multer({ storage: storage })
 
+
+  const ID = "AKIA6E6FFYILN4QR2OGP";
+  const SECRET = "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";
+  
+  const s3 = new AWS.S3({
+      accessKeyId: ID,
+      secretAccessKey: SECRET
+  });
+
+  const uploadFile = (file) => {
+
+    console.log(file["originalname"]);
+      
+    console.log("******** uploadFile get called *******")
+    const fileContent = fs.readFileSync("uploads/" +file["originalname"]);
+
+     const params = {
+         Bucket: "test-for-video-imazu",
+         Key: "test1",
+         Body: fileContent,
+         
+         
+     };
+ 
+     s3.putObject(params, function(err, data) {
+         if (err) {
+             results.innerHTML = 'ERROR: ' + err;
+             console.log(data);
+         } else {
+             console.log('File upload successfully. ${data.Location}');
+         }
+     });
+ }
+
+
+
+//  これをファイルのアップロードじゃなくて録画したやつをuploads/に入れレバそのままs3に入る
   app.post('/upload', upload.single('file'), function(req, res) {
+    
+        console.log("******** test get called *******")
+    
+        const ID = "AKIA6E6FFYILN4QR2OGP";
+        const SECRET = "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";
+        
+        const s3 = new AWS.S3({
+            accessKeyId: ID,
+            secretAccessKey: SECRET
+        });
+        
+        
+    
+console.log(req.file)
+        
+        
+        uploadFile(req.file);
+    
+       
+    
+
+    
     res.json({ 'result': 'success!' });
   });
+
 
 
 const port = process.env.port || 3000;
