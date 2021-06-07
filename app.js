@@ -19,7 +19,7 @@ app.get("/", (req,res) => {
 app.post("/user_create", (req, res) => {
     console.log("trying to create user....");
 
-    console.log("First Name:" + req.body.last_name);
+    // console.log("First Name:" + req.body.last_name);
     res.end();
 })
 
@@ -58,7 +58,7 @@ app.post("/video", (req,res) => {
             if (err) {
                 throw err;
             } else {
-                console.log('File upload successfully. ${data.Location}');
+                console.log('File upload successfully.');
             }
         })
     }
@@ -107,9 +107,9 @@ app.post("/test", (req,res) => {
         s3.putObject(params, function(err, data) {
             if (err) {
                 results.innerHTML = 'ERROR: ' + err;
-                console.log(data);
+                // console.log(data);
             } else {
-                console.log('File upload successfully. ${data.Location}');
+                console.log('File upload successfully.');
             }
         });
     }
@@ -122,41 +122,32 @@ app.post("/test", (req,res) => {
 })
 
 
-// const localStorage = multer.diskStorage({
-//     destination: function(req, file, cd) {
-//         const destination = "./upload";
-//         console.log("deatination", destination);
-//         cd(null, destination);
-//     },
-//     filename: function(req, file, cd) {
-//         const filename = req.body.id + "." + file.mimetype.toString().slice(file.mimetype.toString().lastIndexOf("/") + 1);
-//         console.log("filename", filename);
-//         cd(null, filename);
-//     }
-// });
-// const uploadLocal = multer({
-//     storage: localStorage
-// });
 
-// app.post("/upload-temp", uploadLocal.array("upload"), async(req, res, next) => {
+
+
+const localStorage = multer.diskStorage({
+    destination: function(req, file, cd) {
+        const destination = "./upload";
+        console.log("deatination", destination);
+        cd(null, destination);
+    },
+    filename: function(req, file, cd) {
+        const filename = req.body.id + "." + file.mimetype.toString().slice(file.mimetype.toString().lastIndexOf("/") + 1);
+        // console.log("filename", filename);
+        cd(null, filename);
+    }
+});
+const uploadLocal = multer({
+    storage: localStorage
+});
+
+app.post("/upload-temp", uploadLocal.array("upload"), async(req, res, next) => {
     
-//     res.json({id: req.body.id});
-// });
+    res.json({id: req.body.id});
+});
 
 // const upload = multer({ dest: './uploads/' }).single('thumbnail');
-// app.post("/upload-temp", function(req, res) {
-//     console.log("test")
-//     console.log(req.body);
-//     console.log("**************");
-    
-//     upload(req, res, function(err) {
-//         if(err) {
-//             res.send("Failede to write" + req.body.q.file.destination + "with" + err)
-//         } else {
-//             res.send("uploaded : " + req.body.q);
-//         }
-//     })
-// })
+
 
 
 app.post("/ffmpeg", async(req, res, next) => {
@@ -165,8 +156,8 @@ app.post("/ffmpeg", async(req, res, next) => {
         const {id, type} = req.body;
         const localFileInput = `${reqPath}${id}.webm`;
         const localFileOutput = `${reqPath}${id}.${type}`;
-        console.log("localInput", localFileInput);
-        console.log("localOutput", localFileOutput);
+        // console.log("localInput", localFileInput);
+        // console.log("localOutput", localFileOutput);
         const key = `canvas/${id}.${type}`;
         await new Promise((resolve, reject) => {
            ffmpeg().input(localFileInput)
@@ -205,26 +196,31 @@ app.post("/ffmpeg", async(req, res, next) => {
 
 // こっちが正しい
 
-  var storage = multer.diskStorage({
-    // ファイルの保存先を指定
-    destination: function (req, file, cb) {
-      cb(null, 'uploads/')
-    },
-    // ファイル名を指定(オリジナルのファイル名を指定)
-    filename: function (req, file, cb) {
-      cb(null, file.originalname)
-    }
-  })
-  var upload = multer({ storage: storage })
+//   var storage = multer.diskStorage({
+//     // ファイルの保存先を指定
+//     destination: function (req, file, cb) {
+//       cb(null, 'uploads/')
+//     },
+//     // ファイル名を指定(オリジナルのファイル名を指定)
+//     filename: function (req, file, cb) {
+//       cb(null, file.originalname)
+//     }
+//   })
+//   var upload = multer({ storage: storage })
 
 
-  const ID = "AKIA6E6FFYILN4QR2OGP";
-  const SECRET = "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";
+//   const ID = "AKIA6E6FFYILN4QR2OGP";
+//   const SECRET = "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";
   
-  const s3 = new AWS.S3({
-      accessKeyId: ID,
-      secretAccessKey: SECRET
-  });
+//   const s3 = new AWS.S3({
+//       accessKeyId: ID,
+//       secretAccessKey: SECRET
+//   });
+
+
+
+
+
 
   const uploadFile = (file) => {
 
@@ -244,41 +240,172 @@ app.post("/ffmpeg", async(req, res, next) => {
      s3.putObject(params, function(err, data) {
          if (err) {
              results.innerHTML = 'ERROR: ' + err;
-             console.log(data);
+            //  console.log(data);
          } else {
-             console.log('File upload successfully. ${data.Location}');
+             console.log('File upload successfully.');
          }
      });
  }
 
 
+  
 
-//  これをファイルのアップロードじゃなくて録画したやつをuploads/に入れレバそのままs3に入る
-  app.post('/upload', upload.single('file'), function(req, res) {
+
+// //  これをファイルのアップロードじゃなくて録画したやつをuploads/に入れレバそのままs3に入る
+//   app.post('/upload', upload.single('file'), function(req, res) {
     
-        console.log("******** test get called *******")
+//         console.log("******** test get called *******")
     
-        const ID = "AKIA6E6FFYILN4QR2OGP";
+//         const ID = "AKIA6E6FFYILN4QR2OGP";
+//         const SECRET = "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";
+        
+//         const s3 = new AWS.S3({
+//             accessKeyId: ID,
+//             secretAccessKey: SECRET
+//         });
+    
+// console.log(req.file)
+//         uploadFile(req.file);
+//     res.json({ 'result': 'success!' });
+//   });
+
+
+
+//   var storage = multer.diskStorage({
+     
+//     // ファイルの保存先を指定
+//     destination: function (req, file, cb) {
+//       cb(null, 'uploads/')
+//     },
+//     // ファイル名を指定(オリジナルのファイル名を指定)
+//     filename: function (req, file, cb) {
+//       cb(null, "file")
+//     }
+//   })
+//   var upload = multer({ storage: storage })
+
+
+  var storage = multer.diskStorage({
+    // ファイルの保存先を指定
+    destination: function (req, file, cb) {
+      cb(null, '/uploads')
+    },
+    // ファイル名を指定(オリジナルのファイル名を指定)
+    filename: function (req, file, cb) {
+      cb(null, file.originalname)
+    }
+  })
+  var upload = multer({ storage: storage })
+
+  const uploadFile_test = (file) => {
+
+    
+      
+    console.log("******** uploadFile get called *******")
+    const fileContent = fs.readFileSync("uploads/" +file.name);
+
+     const params = {
+         Bucket: "test-for-video-imazu",
+         Key: "test1",
+         Body: fileContent,
+         
+         
+     };
+ 
+     s3.putObject(params, function(err, data) {
+         if (err) {
+             results.innerHTML = 'ERROR: ' + err;
+            //  console.log(data);
+         } else {
+             console.log('File upload successfully.');
+         }
+     });
+ }
+
+
+//  reindex.htmlのやつ
+ app.post("/reupload", upload.single("file"), function(req, res) {
+    console.log("******** test get called *******")
+    const ID = "AKIA6E6FFYILN4QR2OGP";
         const SECRET = "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";
         
         const s3 = new AWS.S3({
             accessKeyId: ID,
             secretAccessKey: SECRET
         });
-        
-        
-    
-console.log(req.file)
-        
-        
-        uploadFile(req.file);
-    
-       
-    
+        console.log("****************  body  ********************")
+    console.log(req.body.file[0])
+    console.log("****************  body  ********************")
 
-    
+     uploadFile_test(req.body.file);
     res.json({ 'result': 'success!' });
+})
+//  reindex.htmlのやつ
+
+
+
+  app.post("/upload-temp", upload.single("file"), function(req, res) {
+    console.log("******** test get called *******")
+    const ID = "AKIA6E6FFYILN4QR2OGP";
+        const SECRET = "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";
+        
+        const s3 = new AWS.S3({
+            accessKeyId: ID,
+            secretAccessKey: SECRET
+        });
+    
+     uploadFile_test(req.body.p);
+    res.json({ 'result': 'success!' });
+})
+
+
+
+
+
+// var storage = multer.diskStorage({
+//     // ファイルの保存先を指定
+//     destination: function (req, file, cb) {
+//       cb(null, 'uploads/')
+//     },
+//     // ファイル名を指定(オリジナルのファイル名を指定)
+//     filename: function (req, file, cb) {
+//       cb(null, "original")
+//     }
+//   })
+//   var upload = multer({ storage: storage })
+
+
+  const ID = "AKIA6E6FFYILN4QR2OGP";
+  const SECRET = "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";
+  
+  const s3 = new AWS.S3({
+      accessKeyId: ID,
+      secretAccessKey: SECRET
   });
+
+
+
+
+
+
+// //  これをファイルのアップロードじゃなくて録画したやつをuploads/に入れレバそのままs3に入る
+// app.post('/upload', upload.single('file'), function(req, res) {
+    
+//     console.log("******** test get called *******")
+
+//     const ID = "AKIA6E6FFYILN4QR2OGP";
+//     const SECRET = "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";
+    
+//     const s3 = new AWS.S3({
+//         accessKeyId: ID,
+//         secretAccessKey: SECRET
+//     });
+
+// console.log(req.file)
+//     uploadFile(req.file);
+// res.json({ 'result': 'success!' });
+// });
+
 
 
 

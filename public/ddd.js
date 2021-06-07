@@ -43,7 +43,7 @@ function dodo(blob, ext){
 function dodo_test(blob, ext){
   // const url = URL.createObjectURL(blob);
   var form = document.createElement('form');
-  form.action = '/upload-temp';
+  form.action = '/upload';
   form.method = 'post';
   form.enctype="multipart/form-data"
 
@@ -52,12 +52,12 @@ function dodo_test(blob, ext){
   //   q.name = 'q';
    
   
-    var p = document.createElement('input');
+    var file = document.createElement('input');
     p.value = blob
     
 
-    form.appendChild(q);
-    form.appendChild(p);
+   
+    form.appendChild(file);
     document.body.appendChild(form);
 
     form.submit();

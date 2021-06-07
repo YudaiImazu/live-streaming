@@ -1,4 +1,15 @@
-const MAXSECONDS=20;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button id="start">record</button> <button id="stop">stop</button><br>
+<video id='local-video' style="vertical-align: top; width:320px; height:240px; border: black 1px solid;" muted playsinline></video>
+<script>
+    const MAXSECONDS=20;
 document.getElementById("start").addEventListener('click', start);
 document.getElementById("stop").addEventListener('click', stop);
 const video = document.getElementById('local-video');
@@ -8,7 +19,7 @@ async function start() {
   video.muted = true;
   video.srcObject = stream;
   await new Promise((resolve) => video.onloadedmetadata = resolve);
-  window.mediaRecorder = new MediaRecorder(stream, {mimeType: 'video/webm'});
+  window.mediaRecorder = new MediaRecorder(stream);
   window.chunks = [];
   mediaRecorder.ondataavailable = (e)=>{
     chunks.push(e.data);
@@ -43,7 +54,7 @@ function dodo(blob, ext){
 function dodo_test(blob, ext){
   // const url = URL.createObjectURL(blob);
   var form = document.createElement('form');
-  form.action = '/upload-temp';
+  form.action = '/reupload';
   form.method = 'post';
   form.enctype="multipart/form-data"
 
@@ -54,9 +65,9 @@ function dodo_test(blob, ext){
   
     var p = document.createElement('input');
     p.value = blob
-    
+    p.name = "file"
 
-    form.appendChild(q);
+
     form.appendChild(p);
     document.body.appendChild(form);
 
@@ -69,3 +80,6 @@ function stop() {
   window.mediaRecorder?.stop();
   window.mediaRecorder = null;
 }
+</script>
+</body>
+</html>
